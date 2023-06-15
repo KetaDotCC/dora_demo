@@ -15,11 +15,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Stack(
-        children: const [
-          Home(),
-        ],
-      ),
+      home: Home(),
     );
   }
 }
@@ -55,23 +51,22 @@ class _HomeState extends State<Home> {
                     const Text("With RepaintBoundary"),
                     Transform(
                       transform: transform.clone()
-                        ..rotateX(-value * flipRateScale),
-                      child: Container(
-                        color: Colors.red,
-                        width: 150,
-                        height: 150,
-                        alignment: Alignment.center,
-                        child: RepaintBoundary(
-                          key: key,
-                          child: Transform(
-                            // key: key,
-                            transform: transform.clone()
-                              ..rotateY(-value * flipRateScale),
-                            child: Container(
-                              color: Colors.black,
-                              width: 60,
-                              height: 60,
-                            ),
+                        ..rotateY(-value * flipRateScale),
+                      child: RepaintBoundary(
+                        key: key,
+                        child: Transform(
+                          // key: key,
+                          transform: transform.clone()
+                            ..rotateY(-value * flipRateScale),
+                          child: Column(
+                            children: [
+                              Container(
+                                color: Colors.black,
+                                width: 60,
+                                height: 60,
+                              ),
+                              Text("TEST")
+                            ],
                           ),
                         ),
                       ),
@@ -172,21 +167,20 @@ class _HomeState extends State<Home> {
                     const Text("Without RepaintBoundary"),
                     Transform(
                       transform: transform.clone()
-                        ..rotateX(-value * flipRateScale),
-                      child: Container(
-                        color: Colors.red,
-                        width: 150,
-                        height: 150,
-                        alignment: Alignment.center,
-                        child: Transform(
-                          // key: key,
-                          transform: transform.clone()
-                            ..rotateY(-value * flipRateScale),
-                          child: Container(
-                            color: Colors.black,
-                            width: 60,
-                            height: 60,
-                          ),
+                        ..rotateY(-value * flipRateScale),
+                      child: Transform(
+                        // key: key,
+                        transform: transform.clone()
+                          ..rotateY(-value * flipRateScale),
+                        child: Column(
+                          children: [
+                            Container(
+                              color: Colors.black,
+                              width: 60,
+                              height: 60,
+                            ),
+                            Text("TEST")
+                          ],
                         ),
                       ),
                     ),
