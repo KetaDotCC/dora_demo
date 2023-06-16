@@ -14,12 +14,8 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Stack(
-        children: const [
-          Home(),
-        ],
-      ),
+    return const MaterialApp(
+      home: Home(),
     );
   }
 }
@@ -40,7 +36,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    var transform = Matrix4.identity();
+    var transform = Matrix4.identity()..setEntry(3, 2, 0.001);
     // print(transform);
     return Scaffold(
       body: Row(
