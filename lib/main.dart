@@ -15,7 +15,11 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: Home(),
+      home: Stack(
+        children: [
+          Home(),
+        ],
+      ),
     );
   }
 }
@@ -48,7 +52,10 @@ class _HomeState extends State<Home> {
                 padding: const EdgeInsets.all(32.0),
                 child: Column(
                   children: [
-                    const Text("With RepaintBoundary"),
+                    const Text(
+                      "With RepaintBoundary",
+                      style: TextStyle(color: Colors.blue),
+                    ),
                     Transform(
                       transform: transform.clone()
                         ..rotateX(-value * flipRateScale),
@@ -59,17 +66,24 @@ class _HomeState extends State<Home> {
                         alignment: Alignment.center,
                         child: RepaintBoundary(
                           key: key,
-                          child: Transform(
-                            // key: key,
-                            transform: transform.clone()
-                              ..rotateY(-value * flipRateScale),
-                            child: Container(
-                              color: Colors.black,
-                              width: 60,
-                              height: 60,
-                            ),
-                          ),
-                        ),
+                            child: Stack(
+                              // mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  child: Transform(
+                                    // key: key,
+                                    transform: transform.clone()
+                                      ..rotateY(-value * flipRateScale),
+                                    child: Container(
+                                      color: Colors.black,
+                                      width: 60,
+                                      height: 60,
+                                    ),
+                                  ),
+                                ),
+                                Text("tes")
+                              ],
+                            )),
                       ),
                     ),
                     // Material(
