@@ -20,19 +20,16 @@ class Demo extends StatelessWidget {
   const Demo({super.key});
   @override
   Widget build(BuildContext context) {
-    var innerBox = SizedBox(
-      width: 100,
-      height: 100,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(30),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-                color: Colors.blue.withAlpha(230)
-            ),
-              ),
+    var innerBox = Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: 100,
+        height: 100,
+        child: RepaintBoundary(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
+            child:  const SizedBox(),
+          ),
         ),
       ),
     );
@@ -41,26 +38,34 @@ class Demo extends StatelessWidget {
       height: 200,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(30),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
-          child: Container(
-            color: Colors.red.withAlpha(10),
-            child: Stack(
-              children: [
-                innerBox,
-              ],
-            ),
+        child: Container(
+          color: Colors.red.withAlpha(10),
+          child: Stack(
+            children: [
+              innerBox,
+            ],
           ),
         ),
       ),
     );
     return Stack(
       children: [
-        Image.network('https://cataas.com/cat'),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: outerBox,
+        Container(
+          width: 300,
+          height: 300,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              Colors.white10,
+              Colors.orangeAccent,
+              Colors.blue
+            ])
+          ),
         ),
+        // Padding(
+        //   padding: const EdgeInsets.all(8.0),
+        //   child: outerBox,
+        // ),
+        outerBox
       ],
     );
   }
