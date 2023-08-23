@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 
 void main() {
-  runApp(App());
+  runApp(const App());
 }
 
 class App extends StatelessWidget {
@@ -32,261 +32,50 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  var rotateX = 0.0;
-  var value = 0.5;
-  final key = GlobalKey<State>();
-  var flipRateScale = 2.0;
-  Uint8List? img;
+  final colors = [Colors.red, Colors.orange, Colors.blue];
 
   @override
   Widget build(BuildContext context) {
-    var transform = Matrix4.identity()..setEntry(3, 2, 0.001);
-    // print(transform);
     return Scaffold(
-      body: Row(
-        children: [
-          Expanded(
-              child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: Column(
-                  children: [
-                    const Text(
-                      "With RepaintBoundary",
-                      style: TextStyle(color: Colors.blue),
+      backgroundColor: Colors.black,
+      body: SingleChildScrollView(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 400,
+                  child: ShaderMask(
+                    shaderCallback: (rect) {
+                      return RadialGradient(colors: colors).createShader(rect);
+                    },
+                    child: Text(
+                      "This is the first text which has 400 width, let make them same width.",
+                      style: TextStyle(fontSize: 30, color: Colors.grey.shade500),
                     ),
-                    Transform(
-                      transform: transform.clone()
-                        ..rotateX(-value * flipRateScale),
-                      child: Container(
-                        color: Colors.red,
-                        width: 150,
-                        height: 150,
-                        alignment: Alignment.center,
-                        child: RepaintBoundary(
-                          key: key,
-                            child: Stack(
-                              // mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  child: Transform(
-                                    // key: key,
-                                    transform: transform.clone()
-                                      ..rotateY(-value * flipRateScale),
-                                    child: Container(
-                                      color: Colors.black,
-                                      width: 60,
-                                      height: 60,
-                                    ),
-                                  ),
-                                ),
-                                Text("tes")
-                              ],
-                            )),
-                      ),
-                    ),
-                    // Material(
-                    //   child: Container(
-                    //     child: Text("${transform}"),
-                    //   ),
-                    // ),
-
-                    // Material(
-                    //   child: Transform(
-                    //     transform: Matrix4.skewX(0.1)..rotateX(rotateX),
-                    //     child: ColoredBox(
-                    //       color: Colors.black,
-                    //       child: Transform(
-                    //         alignment: Alignment.topRight,
-                    //         transform: Matrix4.skewX(0.1)..rotateX(rotateX),
-                    //         child: Container(
-                    //           padding: const EdgeInsets.all(8.0),
-                    //           color: const Color(0xFFE8581C),
-                    //           child: const Text('测试！'),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    const SizedBox(
-                      height: 8.0,
-                    ),
-                    Material(
-                      child: SizedBox(
-                        width: 100,
-                        height: 10,
-                        child: Slider(
-                            value: value,
-                            onChanged: (v) {
-                              setState(() {
-                                rotateX = 2 * pi * v;
-                                value = v;
-                              });
-                              Future.delayed(Duration.zero, () {
-                                final bound =
-                                    key.currentContext?.findRenderObject()
-                                        as RenderRepaintBoundary;
-                                // bound.toImage().then((value) async {
-                                //   final img = await value.toByteData(
-                                //       format: ui.ImageByteFormat.png);
-                                //   setState(() {
-                                //     this.img = img?.buffer.asUint8List();
-                                //   });
-                                // });
-                              });
-                            }),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8.0,
-                    ),
-
-                    Column(
-                      children: [
-                        TextButton(
-                            onPressed: () {
-                              final bound = key.currentContext
-                                  ?.findRenderObject() as RenderRepaintBoundary;
-                              // bound.toImage().then((value) async {
-                              //   final img = await value.toByteData(
-                              //       format: ui.ImageByteFormat.png);
-                              //   setState(() {
-                              //     this.img = img?.buffer.asUint8List();
-                              //   });
-                              // });
-                            },
-                            child: const Text("Catch Images")),
-                        img == null
-                            ? Text("img")
-                            : Image.memory(
-                                img!,
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.contain,
-                              )
-                      ],
-                    )
-                  ],
+                  ),
                 ),
-              )
-            ],
-          )),
-          Expanded(
-              child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: Column(
-                  children: [
-                    const Text("Without RepaintBoundary"),
-                    Transform(
-                      transform: transform.clone()
-                        ..rotateX(-value * flipRateScale),
-                      child: Container(
-                        color: Colors.red,
-                        width: 150,
-                        height: 150,
-                        alignment: Alignment.center,
-                        child: Transform(
-                          // key: key,
-                          transform: transform.clone()
-                            ..rotateY(-value * flipRateScale),
-                          child: Container(
-                            color: Colors.black,
-                            width: 60,
-                            height: 60,
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Material(
-                    //   child: Container(
-                    //     child: Text("${transform}"),
-                    //   ),
-                    // ),
-
-                    // Material(
-                    //   child: Transform(
-                    //     transform: Matrix4.skewX(0.1)..rotateX(rotateX),
-                    //     child: ColoredBox(
-                    //       color: Colors.black,
-                    //       child: Transform(
-                    //         alignment: Alignment.topRight,
-                    //         transform: Matrix4.skewX(0.1)..rotateX(rotateX),
-                    //         child: Container(
-                    //           padding: const EdgeInsets.all(8.0),
-                    //           color: const Color(0xFFE8581C),
-                    //           child: const Text('测试！'),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    const SizedBox(
-                      height: 8.0,
-                    ),
-                    Material(
-                      child: SizedBox(
-                        width: 100,
-                        height: 10,
-                        child: Slider(
-                            value: value,
-                            onChanged: (v) {
-                              setState(() {
-                                rotateX = 2 * pi * v;
-                                value = v;
-                              });
-                              Future.delayed(Duration.zero, () {
-                                final bound =
-                                    key.currentContext?.findRenderObject()
-                                        as RenderRepaintBoundary;
-                                // bound.toImage().then((value) async {
-                                //   final img = await value.toByteData(
-                                //       format: ui.ImageByteFormat.png);
-                                //   setState(() {
-                                //     this.img = img?.buffer.asUint8List();
-                                //   });
-                                // });
-                              });
-                            }),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8.0,
-                    ),
-
-                    Column(
-                      children: [
-                        TextButton(
-                            onPressed: () {
-                              final bound = key.currentContext
-                                  ?.findRenderObject() as RenderRepaintBoundary;
-                              // bound.toImage().then((value) async {
-                              //   final img = await value.toByteData(
-                              //       format: ui.ImageByteFormat.png);
-                              //   setState(() {
-                              //     this.img = img?.buffer.asUint8List();
-                              //   });
-                              // });
-                            },
-                            child: const Text("Catch Images")),
-                        img == null
-                            ? Text("img")
-                            : Image.memory(
-                                img!,
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.contain,
-                              )
-                      ],
-                    )
-                  ],
+                SizedBox(
+                  height: 50,
                 ),
-              )
-            ],
-          ))
-        ],
+                SizedBox(
+                  width: 400,
+                  child: ShaderMask(
+                    shaderCallback: (rect) {
+                      return RadialGradient(colors: colors).createShader(rect);
+                    },
+                    child: Text(
+                      "This is the first text which has 400 width, let make them same width but different height. place holder  place holder  place holder  place holder  place holder",
+                      style: TextStyle(fontSize: 30,color: Colors.grey.shade500),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

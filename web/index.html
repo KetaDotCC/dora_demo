@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
   <title>dora_demo</title>
   <link rel="manifest" href="manifest.json">
@@ -41,19 +41,30 @@
 </head>
 <body>
   <script>
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            appRunner.runApp();
-          });
-        }
+    // async function requestWebGPU() {
+    //   const adapter = await navigator.gpu.requestAdapter();
+    //   const device = await adapter.requestDevice();
+    //   window.gpuDevice = device;
+    // }
+
+    window.addEventListener('load', function (ev) {
+      // console.log("requesting gpu device");
+      // requestWebGPU().then(() => {
+        // console.log("gpu device:", window.gpuDevice);
+        // Download main.dart.js
+        _flutter.loader.loadEntrypoint({
+          serviceWorker: {
+            serviceWorkerVersion: serviceWorkerVersion,
+          },
+          onEntrypointLoaded: function (engineInitializer) {
+            engineInitializer.initializeEngine().then(function (appRunner) {
+              appRunner.runApp();
+            });
+          }
+        });
       });
-    });
+    // });
   </script>
 </body>
+
 </html>
