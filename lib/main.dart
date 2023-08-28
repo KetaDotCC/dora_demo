@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
+import 'dart:js' as js;
+final isCanvasKit = js.context['flutterCanvasKit'] != null;
 
 void main() {
   runApp(const App());
@@ -32,51 +34,73 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final colors = [Colors.red, Colors.orange, Colors.blue];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: SingleChildScrollView(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 400,
-                  child: ShaderMask(
-                    shaderCallback: (rect) {
-                      return RadialGradient(colors: colors).createShader(rect);
-                    },
-                    child: Text(
-                      "This is the first text which has 400 width, let make them same width.",
-                      style: TextStyle(fontSize: 30, color: Colors.grey.shade500),
-                    ),
-                  ),
+        backgroundColor: Colors.black,
+        body: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(isCanvasKit? 'CanvasKit' : 'HTML', style: TextStyle(
+                color: Colors.white
+              ),),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.yellow, width: 8.0)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                      width: 300,
+                      height: 300,
+                      child: RepaintBoundary(
+                        child: CustomPaint(
+                          painter: NestPainter(),
+                        ),
+                      )),
                 ),
-                SizedBox(
-                  height: 50,
-                ),
-                SizedBox(
-                  width: 400,
-                  child: ShaderMask(
-                    shaderCallback: (rect) {
-                      return RadialGradient(colors: colors).createShader(rect);
-                    },
-                    child: Text(
-                      "This is the first text which has 400 width, let make them same width but different height. place holder  place holder  place holder  place holder  place holder",
-                      style: TextStyle(fontSize: 30,color: Colors.grey.shade500),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+              ),
+            ],
+          ),
+        ));
+  }
+}
+
+class NestPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final p = Paint();
+    final r = Rect.fromLTWH(0, 0, size.width, size.height);
+    canvas.save();
+    canvas.clipRect(r);
+    canvas.drawRect(
+        r,
+        p
+          ..color = Colors.red
+          ..maskFilter = MaskFilter.blur(BlurStyle.normal, 20));
+    canvas.restore();
+
+    canvas.save();
+    canvas.clipRect(r);
+    canvas.drawRect(
+        r.translate(0, 50),
+        p
+          ..color = Colors.blue
+          ..maskFilter = MaskFilter.blur(BlurStyle.normal, 20));
+    // canvas.saveLayer(null, p);
+    canvas.restore();
+    // canvas.drawRect(
+    //     r.translate(50, 50),
+    //     p
+    //       ..color = Colors.blue
+    //       ..maskFilter = MaskFilter.blur(BlurStyle.inner, 0));
+    // canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }
