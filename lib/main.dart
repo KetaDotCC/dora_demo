@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:js_interop';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:html';
+import 'dart:js_util';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -21,9 +23,10 @@ void main() async {
     final div = ImageElement(src: "assets/test1.jpg");
     div.style.cssText = 'background-color: white; width: 400px; height: 250px;';
     div.innerText = "我是垫在图片底下的字，看到我你就输了";
+    setProperty(div.toJS, '__flutterImage', allowInterop((int viewId) {
+      return screenshotImage;
+    }));
     return div;
-  }, onEmbedderNullCallback: (int viewId) {
-    return screenshotImage!;
   });
   // ignore: undefined_prefixed_name
   ui.platformViewRegistry.registerViewFactory('test-no-fallback', (int viewId) {
@@ -97,9 +100,7 @@ class _HomeState extends State<Home> {
                     child: Container(
                       width: 400,
                       height: 250,
-                      decoration: BoxDecoration(
-                        color: Colors.black
-                      ),
+                      decoration: BoxDecoration(color: Colors.black),
                       child: const HtmlElementView(viewType: 'test'),
                     ),
                   ),
@@ -137,9 +138,7 @@ class _HomeState extends State<Home> {
                   child: Container(
                     width: 400,
                     height: 250,
-                    decoration: BoxDecoration(
-                        color: Colors.black
-                      ),
+                    decoration: BoxDecoration(color: Colors.black),
                     child: const HtmlElementView(viewType: 'test-no-fallback'),
                   ),
                 ),
